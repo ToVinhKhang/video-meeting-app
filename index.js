@@ -35,7 +35,7 @@ app.use(session({
 }))
 
 
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
     if (req.session.username) {
         res.render('index')
     } else {
@@ -58,14 +58,14 @@ app.post('/login', (req, res) => {
                     res.redirect(`/meetingroom/${v4UniqueId()}`);
                 } else {
                     res.render('login', {
-                        error: 'Dang nhap that bai'
+                        error: 'Invalid email or password'
                     })
                 }
             })
         })
         .catch(err => {
-            res.json({
-                error: 'Loi server'
+            res.render('login', {
+                error: 'Invalid email or password'
             })
         })
 })
@@ -103,11 +103,9 @@ app.post('/signup', (req, res) => {
                         username: username
                     })
                     .then(data => {
-                        /* const passwordhash = bcrypt.hash(password, 10)
-                        const confirmpasswordhash = bcrypt.hash(confirmpassword, 10) */
                         if (data) {
                             res.render('signup', {
-                                error: 'Người dùng đã tồn tại'
+                                error: 'Email is already'
                             })
                         } else {
                             return AccountModel.create({
@@ -120,9 +118,7 @@ app.post('/signup', (req, res) => {
                         res.render('login')
                     })
                     .catch(err => {
-                        res.render('signup', {
-                            error: 'Tạo tài khoản thất bại'
-                        })
+                        res.render('signup')
                     })
             })
         })
